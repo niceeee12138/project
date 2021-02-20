@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smallcompany.nice.dao.AuthoritytypeMapper" >
+  <resultMap id="BaseResultMap" type="com.smallcompany.nice.model.Authoritytype" >
+    <id column="at_id" property="atId" jdbcType="INTEGER" />
+    <result column="at_power" property="atPower" jdbcType="VARCHAR" />
+    <result column="at_name" property="atName" jdbcType="VARCHAR" />
+    <result column="at_sort" property="atSort" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    at_id, at_power, at_name, at_sort
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from authoritytype
+    where at_id = #{atId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from authoritytype
+    where at_id = #{atId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smallcompany.nice.model.Authoritytype" >
+    insert into authoritytype (at_id, at_power, at_name, 
+      at_sort)
+    values (#{atId,jdbcType=INTEGER}, #{atPower,jdbcType=VARCHAR}, #{atName,jdbcType=VARCHAR}, 
+      #{atSort,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smallcompany.nice.model.Authoritytype" >
+    insert into authoritytype
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="atId != null" >
+        at_id,
+      </if>
+      <if test="atPower != null" >
+        at_power,
+      </if>
+      <if test="atName != null" >
+        at_name,
+      </if>
+      <if test="atSort != null" >
+        at_sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="atId != null" >
+        #{atId,jdbcType=INTEGER},
+      </if>
+      <if test="atPower != null" >
+        #{atPower,jdbcType=VARCHAR},
+      </if>
+      <if test="atName != null" >
+        #{atName,jdbcType=VARCHAR},
+      </if>
+      <if test="atSort != null" >
+        #{atSort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smallcompany.nice.model.Authoritytype" >
+    update authoritytype
+    <set >
+      <if test="atPower != null" >
+        at_power = #{atPower,jdbcType=VARCHAR},
+      </if>
+      <if test="atName != null" >
+        at_name = #{atName,jdbcType=VARCHAR},
+      </if>
+      <if test="atSort != null" >
+        at_sort = #{atSort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where at_id = #{atId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smallcompany.nice.model.Authoritytype" >
+    update authoritytype
+    set at_power = #{atPower,jdbcType=VARCHAR},
+      at_name = #{atName,jdbcType=VARCHAR},
+      at_sort = #{atSort,jdbcType=INTEGER}
+    where at_id = #{atId,jdbcType=INTEGER}
+  </update>
+</mapper>

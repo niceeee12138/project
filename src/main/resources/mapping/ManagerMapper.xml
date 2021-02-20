@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smallcompany.nice.dao.ManagerMapper" >
+  <resultMap id="BaseResultMap" type="com.smallcompany.nice.model.Manager" >
+    <id column="mng_id" property="mngId" jdbcType="INTEGER" />
+    <result column="mng_name" property="mngName" jdbcType="VARCHAR" />
+    <result column="mng_number" property="mngNumber" jdbcType="CHAR" />
+    <result column="mng_status" property="mngStatus" jdbcType="INTEGER" />
+    <result column="mng_headshot" property="mngHeadshot" jdbcType="CHAR" />
+    <result column="mng_tel" property="mngTel" jdbcType="CHAR" />
+    <result column="mng_pwd" property="mngPwd" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mng_id, mng_name, mng_number, mng_status, mng_headshot, mng_tel, mng_pwd
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manager
+    where mng_id = #{mngId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByTel" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from manager
+    where mng_tel = #{mngTel,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from manager
+    where mng_id = #{mngId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smallcompany.nice.model.Manager" >
+    insert into manager (mng_id, mng_name, mng_number, 
+      mng_status, mng_headshot, mng_tel, 
+      mng_pwd)
+    values (#{mngId,jdbcType=INTEGER}, #{mngName,jdbcType=VARCHAR}, #{mngNumber,jdbcType=CHAR}, 
+      #{mngStatus,jdbcType=INTEGER}, #{mngHeadshot,jdbcType=CHAR}, #{mngTel,jdbcType=INTEGER}, 
+      #{mngPwd,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smallcompany.nice.model.Manager" >
+    insert into manager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mngId != null" >
+        mng_id,
+      </if>
+      <if test="mngName != null" >
+        mng_name,
+      </if>
+      <if test="mngNumber != null" >
+        mng_number,
+      </if>
+      <if test="mngStatus != null" >
+        mng_status,
+      </if>
+      <if test="mngHeadshot != null" >
+        mng_headshot,
+      </if>
+      <if test="mngTel != null" >
+        mng_tel,
+      </if>
+      <if test="mngPwd != null" >
+        mng_pwd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mngId != null" >
+        #{mngId,jdbcType=INTEGER},
+      </if>
+      <if test="mngName != null" >
+        #{mngName,jdbcType=VARCHAR},
+      </if>
+      <if test="mngNumber != null" >
+        #{mngNumber,jdbcType=CHAR},
+      </if>
+      <if test="mngStatus != null" >
+        #{mngStatus,jdbcType=INTEGER},
+      </if>
+      <if test="mngHeadshot != null" >
+        #{mngHeadshot,jdbcType=CHAR},
+      </if>
+      <if test="mngTel != null" >
+        #{mngTel,jdbcType=INTEGER},
+      </if>
+      <if test="mngPwd != null" >
+        #{mngPwd,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smallcompany.nice.model.Manager" >
+    update manager
+    <set >
+      <if test="mngName != null" >
+        mng_name = #{mngName,jdbcType=VARCHAR},
+      </if>
+      <if test="mngNumber != null" >
+        mng_number = #{mngNumber,jdbcType=CHAR},
+      </if>
+      <if test="mngStatus != null" >
+        mng_status = #{mngStatus,jdbcType=INTEGER},
+      </if>
+      <if test="mngHeadshot != null" >
+        mng_headshot = #{mngHeadshot,jdbcType=CHAR},
+      </if>
+      <if test="mngTel != null" >
+        mng_tel = #{mngTel,jdbcType=INTEGER},
+      </if>
+      <if test="mngPwd != null" >
+        mng_pwd = #{mngPwd,jdbcType=CHAR},
+      </if>
+    </set>
+    where mng_id = #{mngId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smallcompany.nice.model.Manager" >
+    update manager
+    set mng_name = #{mngName,jdbcType=VARCHAR},
+      mng_number = #{mngNumber,jdbcType=CHAR},
+      mng_status = #{mngStatus,jdbcType=INTEGER},
+      mng_headshot = #{mngHeadshot,jdbcType=CHAR},
+      mng_tel = #{mngTel,jdbcType=INTEGER},
+      mng_pwd = #{mngPwd,jdbcType=CHAR}
+    where mng_id = #{mngId,jdbcType=INTEGER}
+  </update>
+</mapper>

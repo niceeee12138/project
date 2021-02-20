@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smallcompany.nice.dao.Mng_atMapper" >
+  <resultMap id="BaseResultMap" type="com.smallcompany.nice.model.Mng_atKey" >
+    <id column="at_id" property="atId" jdbcType="INTEGER" />
+    <id column="mng_id" property="mngId" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.smallcompany.nice.model.Mng_atKey" >
+    delete from mng_at
+    where at_id = #{atId,jdbcType=INTEGER}
+      and mng_id = #{mngId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smallcompany.nice.model.Mng_atKey" >
+    insert into mng_at (at_id, mng_id)
+    values (#{atId,jdbcType=INTEGER}, #{mngId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smallcompany.nice.model.Mng_atKey" >
+    insert into mng_at
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="atId != null" >
+        at_id,
+      </if>
+      <if test="mngId != null" >
+        mng_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="atId != null" >
+        #{atId,jdbcType=INTEGER},
+      </if>
+      <if test="mngId != null" >
+        #{mngId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

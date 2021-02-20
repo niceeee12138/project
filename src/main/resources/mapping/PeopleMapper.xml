@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smallcompany.nice.dao.PeopleMapper" >
+  <resultMap id="BaseResultMap" type="com.smallcompany.nice.model.People" >
+    <id column="pp_id" property="ppId" jdbcType="INTEGER" />
+    <result column="pp_name" property="ppName" jdbcType="VARCHAR" />
+    <result column="pp_position" property="ppPosition" jdbcType="VARCHAR" />
+    <result column="pp_sort" property="ppSort" jdbcType="INTEGER" />
+    <result column="pp_edtime" property="ppEdtime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    pp_id, pp_name, pp_position, pp_sort, pp_edtime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from people
+    where pp_id = #{ppId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from people
+    where pp_id = #{ppId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.smallcompany.nice.model.People" >
+    insert into people (pp_id, pp_name, pp_position, 
+      pp_sort, pp_edtime)
+    values (#{ppId,jdbcType=INTEGER}, #{ppName,jdbcType=VARCHAR}, #{ppPosition,jdbcType=VARCHAR}, 
+      #{ppSort,jdbcType=INTEGER}, #{ppEdtime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smallcompany.nice.model.People" >
+    insert into people
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ppId != null" >
+        pp_id,
+      </if>
+      <if test="ppName != null" >
+        pp_name,
+      </if>
+      <if test="ppPosition != null" >
+        pp_position,
+      </if>
+      <if test="ppSort != null" >
+        pp_sort,
+      </if>
+      <if test="ppEdtime != null" >
+        pp_edtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ppId != null" >
+        #{ppId,jdbcType=INTEGER},
+      </if>
+      <if test="ppName != null" >
+        #{ppName,jdbcType=VARCHAR},
+      </if>
+      <if test="ppPosition != null" >
+        #{ppPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="ppSort != null" >
+        #{ppSort,jdbcType=INTEGER},
+      </if>
+      <if test="ppEdtime != null" >
+        #{ppEdtime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smallcompany.nice.model.People" >
+    update people
+    <set >
+      <if test="ppName != null" >
+        pp_name = #{ppName,jdbcType=VARCHAR},
+      </if>
+      <if test="ppPosition != null" >
+        pp_position = #{ppPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="ppSort != null" >
+        pp_sort = #{ppSort,jdbcType=INTEGER},
+      </if>
+      <if test="ppEdtime != null" >
+        pp_edtime = #{ppEdtime,jdbcType=DATE},
+      </if>
+    </set>
+    where pp_id = #{ppId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smallcompany.nice.model.People" >
+    update people
+    set pp_name = #{ppName,jdbcType=VARCHAR},
+      pp_position = #{ppPosition,jdbcType=VARCHAR},
+      pp_sort = #{ppSort,jdbcType=INTEGER},
+      pp_edtime = #{ppEdtime,jdbcType=DATE}
+    where pp_id = #{ppId,jdbcType=INTEGER}
+  </update>
+</mapper>
