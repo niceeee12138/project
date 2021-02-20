@@ -34,4 +34,15 @@ public class UserService {
         System.out.println(u.getMngId());
         return u;
     }
+
+    public Manager isLogin(Manager m) {
+        Manager m1 = managerMapper.selectByPrimaryKey(m.getMngId());
+        if(m1==null){
+            return null;
+        }
+        if(m1.getMngPwd().equals(m.getMngPwd())){
+            return m1;
+        }
+        return null;
+    }
 }
