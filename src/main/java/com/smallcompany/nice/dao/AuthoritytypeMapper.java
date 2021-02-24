@@ -1,6 +1,7 @@
 package com.smallcompany.nice.dao;
 
 import com.smallcompany.nice.model.Authoritytype;
+import com.smallcompany.nice.model.Manager;
 import org.springframework.stereotype.Repository;
 
 @Repository(value = "authoritytypeMapper")
@@ -16,4 +17,6 @@ public interface AuthoritytypeMapper {
     int updateByPrimaryKeySelective(Authoritytype record);
 
     int updateByPrimaryKey(Authoritytype record);
+
+    Authoritytype selectByName(String atName);
 }

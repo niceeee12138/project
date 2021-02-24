@@ -1,6 +1,8 @@
 package com.smallcompany.nice.service;
 
+import com.smallcompany.nice.dao.AuthoritytypeMapper;
 import com.smallcompany.nice.dao.ManagerMapper;
+import com.smallcompany.nice.model.Authoritytype;
 import com.smallcompany.nice.model.Manager;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class UserService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource(name = "managerMapper")
     private ManagerMapper managerMapper;
+    @Resource(name = "authoritytypeMapper")
+    private AuthoritytypeMapper authoritytypeMapper;
 
     public Integer getManagerbyPhone(String phone){
         Manager m = managerMapper.selectByTel(phone);
@@ -44,5 +48,19 @@ public class UserService {
             return m1;
         }
         return null;
+    }
+
+    public Integer getAtName(String atName){
+        Authoritytype a = authoritytypeMapper.selectByName(atName);
+        if (a==null)
+            return null;
+        return a.getAtId();
+    }
+
+    @Transactional
+    public Authoritytype insertAuthoritytype(Authoritytype a){
+        authoritytypeMapper.insert(a);
+        System.out.println(a.getAtId());
+        return a;
     }
 }

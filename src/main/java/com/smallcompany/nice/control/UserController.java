@@ -6,6 +6,7 @@ package com.smallcompany.nice.control;
  * @Version 1.0
  */
 
+import com.smallcompany.nice.model.Authoritytype;
 import com.smallcompany.nice.model.Manager;
 import com.smallcompany.nice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,30 @@ public class UserController {
             Manager user= userService.insertManager(m);
             map.put("status", 200);
             map.put("user",user);
+        }
+        return map;
+    }
+
+    /**
+            * @Description: 添加管理员类型 
+            * @Param: [authoritytype] 
+            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
+            * @Author: Song 
+            * @Date: 2021/2/23
+            */
+         
+    @RequestMapping(value = "/addmanagerType", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public HashMap<String, Object> register(@RequestBody Authoritytype authoritytype) {
+        HashMap<String, Object> map = new HashMap<>();
+        Integer id = userService.getAtName(authoritytype.getAtName());
+        if (id != null) {
+            map.put("status", 201);
+            map.put("note", "该职位已存在");
+        } else {
+            Authoritytype authoritytype1= userService.insertAuthoritytype(authoritytype);
+            map.put("status", 200);
+            map.put("user",authoritytype1);
         }
         return map;
     }
