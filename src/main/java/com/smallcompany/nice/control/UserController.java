@@ -6,11 +6,16 @@ package com.smallcompany.nice.control;
  * @Version 1.0
  */
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.smallcompany.nice.model.Authoritytype;
 import com.smallcompany.nice.model.Manager;
+import com.smallcompany.nice.model.ResponseJson;
 import com.smallcompany.nice.service.UserService;
+import com.smallcompany.nice.until.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,7 +26,7 @@ import java.util.UUID;
 /**
  * 用户管理子模块，负责用户的添加，修改，删除,注册，登录
  */
-@RestController
+@Controller
 @RequestMapping("/")
 public class UserController {
     @Autowired
@@ -35,28 +40,55 @@ public class UserController {
      * @Author: Song
      * @Date: 2020/10/25
      */
-    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"login", "/"}, method = RequestMethod.GET)
+    public String login() {
+        return "login";
+    }
+
+    @RequestMapping(value = {"index"}, method = RequestMethod.GET)
+    public String toindex() {
+        return "index";
+    }
+
+    /*
+    解决iframe标签中src问题
+     */
+    @RequestMapping(value = {"console"}, method = RequestMethod.GET)
+    public String toconsole() {
+        return "console";
+    }
+
+    @RequestMapping(value="client/add",method = RequestMethod.POST)
     @ResponseBody
-    public HashMap<String, Object> longin(@RequestBody Manager m) {
+    public void addClient(@RequestBody Manager m1){//方法参数必须可以获取到表单数据
+        System.out.println("从前端ajax传过来的数据1为***************"+m1.getMngId());
+        System.out.println("从前端ajax传过来的数据2为***************"+m1.getMngPwd());}
+
+    @RequestMapping(value = "login", method = { RequestMethod.POST})
+    public ResponseJson longin(@RequestBody JSONObject jsonObject) {
         HashMap<String, Object> map = new HashMap<>();
-        Manager m1 = userService.isLogin(m);
+        Manager m1 = new Manager();
+        m1.setMngId((Integer)jsonObject.get("mngId"));
+        m1.setMngPwd((String)jsonObject.get("mngPwd"));
+//        System.out.println(m);
+//        Manager m1 = userService.isLogin(m);
         if (m1 == null) {
             map.put("status", 201);
         } else {
             map.put("status", 200);
             map.put("user", m1);
-
+            System.out.println("登录成功");
             //生成Token令牌
             String token = UUID.randomUUID() + "";
             //存到Redis数据库
             redisTemplate.opsForValue().set(token, m1, Duration.ofDays(1));
             map.put("token", token);
         }
-        return map;
+        return new ResponseJson().success();
     }
 
     /**
-     * @Description: 注册
+     * @Description: 注册(添加管理员)
      * @Param: User
      * @return: java.util.Map<java.lang.String, java.lang.Object>
      * @Author: Song
@@ -65,19 +97,53 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public HashMap<String, Object> register(@RequestBody Manager m) {
+    public HashMap<String, Object> register(@RequestBody JSONArray jsonArray) {
+        String token = (String) jsonArray.getJSONObject(0).get("token");
+        System.out.println(token);
+        Object manager1 = redisTemplate.opsForValue().get(token);
+        Manager manager2= Tool.JsonToManager(jsonArray.getJSONObject(1));
         HashMap<String, Object> map = new HashMap<>();
-        Integer id = userService.getManagerbyPhone(m.getMngTel());
-        if (m.getMngPwd() == null) {
-            map.put("status", 202);
-            map.put("note", "密码错误");
-        } else if (id != null) {
+        Integer id = userService.getManagerbyPhone(manager2.getMngTel());
+        if (manager1!=null){
+            if (manager2.getMngPwd() == null) {
+                map.put("status", 202);
+                map.put("note", "密码错误");
+            } else if (id != null) {
+                map.put("status", 201);
+                map.put("note", "该手机号已注册");
+            } else {
+                Manager manager= userService.insertManager(manager2);
+                map.put("status", 200);
+                map.put("manager",manager);
+            }
+        }else{
+            map.put("status", 204);
+        }
+
+        return map;
+    }
+    /**
+            * @Description: 退出登录 
+            * @Param: [object]
+            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
+            * @Author: Song 
+            * @Date: 2021/2/25
+            */
+         
+    @RequestMapping(value = "/signOut", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public HashMap<String, Object> signOut(@RequestBody JSONObject object) {
+        String token = (String) object.get("token");
+        System.out.println(token);
+        Object manager1 = redisTemplate.opsForValue().get(token);
+        HashMap<String, Object> map = new HashMap<>();
+        if (manager1 != null) {
+            redisTemplate.delete(token);
             map.put("status", 201);
-            map.put("note", "该手机号已注册");
+            map.put("note", "删除成功");
         } else {
-            Manager user= userService.insertManager(m);
             map.put("status", 200);
-            map.put("user",user);
+            map.put("note","删除失败");
         }
         return map;
     }
@@ -90,9 +156,9 @@ public class UserController {
             * @Date: 2021/2/23
             */
          
-    @RequestMapping(value = "/addmanagerType", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/addManagerType", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public HashMap<String, Object> register(@RequestBody Authoritytype authoritytype) {
+    public HashMap<String, Object> addManagerType(@RequestBody Authoritytype authoritytype) {
         HashMap<String, Object> map = new HashMap<>();
         Integer id = userService.getAtName(authoritytype.getAtName());
         if (id != null) {
@@ -105,4 +171,17 @@ public class UserController {
         }
         return map;
     }
+
+    @RequestMapping(value = "/editManager", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public HashMap<String, Object> editManager(@RequestBody JSONArray jsonArray) {
+        String token = (String) jsonArray.getJSONObject(0).get("token");
+        System.out.println(token);
+        Object manager1 = redisTemplate.opsForValue().get(token);
+        HashMap<String, Object> map = new HashMap<>();
+        
+        return map;
+    }
+
+
 }
