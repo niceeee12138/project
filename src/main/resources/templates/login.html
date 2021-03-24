@@ -21,35 +21,12 @@
                 <img id="verifi_images" src=" " style="width: 135px;height: 50px;float: left;position: relative;top: -50px;left: 204px;">
 -->
 
-       <input value="登录" onclick="login()" type="submit"  >
+                <input type="button" id="submit-btn" value="登录" class="layui-btn" lay-submit="" lay-filter="sub">
 
                 <hr class="hr10" >
             </form>
         </div>
-        <script type="text/javascript">
-            function login() {
-                var json={
-                    "username": $("#mngId").val(),
-                    "password": $("#mngPwd").val()}
 
-                $.ajax({
-                    type : 'POST',
-                    url : 'login',
-                    dataType: 'json',
-                    contentType: "application/json;charset=utf-8",
-                    data : JSON.stringify(json),
-                    async : false,
-                    success: function(data) {
-                        if (data.status == 200) {
-                            window.location.href="chatroom";
-                        } else {
-                            alert(data.msg);
-                        }
-                    }
-                });
-            }
-
-        </script>
     </body>
 </html>
 

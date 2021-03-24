@@ -6,6 +6,7 @@ package com.smallcompany.nice.control;
  * @Version 1.0
  */
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.smallcompany.nice.model.Authoritytype;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.UUID;
@@ -64,27 +66,35 @@ public class UserController {
         System.out.println("从前端ajax传过来的数据1为***************"+m1.getMngId());
         System.out.println("从前端ajax传过来的数据2为***************"+m1.getMngPwd());}
 
-    @RequestMapping(value = "login", method = { RequestMethod.POST})
-    public ResponseJson longin(@RequestBody JSONObject jsonObject) {
+    @ResponseBody
+    @RequestMapping(value = "login",method = {RequestMethod.POST})
+    public String longin(HttpServletRequest req) {
         HashMap<String, Object> map = new HashMap<>();
         Manager m1 = new Manager();
-        m1.setMngId((Integer)jsonObject.get("mngId"));
-        m1.setMngPwd((String)jsonObject.get("mngPwd"));
+        String mngId=req.getParameter("mngId");
+        String mngPwd=req.getParameter("mngPwd");
+        Integer mngIdInt = null;
+        if(mngId!=null){
+            mngIdInt = Integer.valueOf(mngId);
+        }
+        m1.setMngId(mngIdInt);
+        m1.setMngPwd(mngPwd);
 //        System.out.println(m);
 //        Manager m1 = userService.isLogin(m);
         if (m1 == null) {
-            map.put("status", 201);
+            //代表登录失败
+            map.put("code",0);
         } else {
-            map.put("status", 200);
-            map.put("user", m1);
+            //代表登录成功
+            map.put("code",200);
             System.out.println("登录成功");
-            //生成Token令牌
-            String token = UUID.randomUUID() + "";
-            //存到Redis数据库
-            redisTemplate.opsForValue().set(token, m1, Duration.ofDays(1));
-            map.put("token", token);
+//            //生成Token令牌
+//            String token = UUID.randomUUID() + "";
+//            //存到Redis数据库
+//            redisTemplate.opsForValue().set(token, m1, Duration.ofDays(1));
+//            map.put("token", token);
         }
-        return new ResponseJson().success();
+        return JSON.toJSONString(map);
     }
 
     /**
@@ -95,7 +105,7 @@ public class UserController {
      * @Date: 2020/11/17
      */
 
-    @RequestMapping(value = "/register", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "register", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public HashMap<String, Object> register(@RequestBody JSONArray jsonArray) {
         String token = (String) jsonArray.getJSONObject(0).get("token");
