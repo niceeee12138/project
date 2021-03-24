@@ -42,30 +42,6 @@ public class UserController {
      * @Author: Song
      * @Date: 2020/10/25
      */
-    @RequestMapping(value = {"login", "/"}, method = RequestMethod.GET)
-    public String login() {
-        return "login";
-    }
-
-    @RequestMapping(value = {"index"}, method = RequestMethod.GET)
-    public String toindex() {
-        return "index";
-    }
-
-    /*
-    解决iframe标签中src问题
-     */
-    @RequestMapping(value = {"console"}, method = RequestMethod.GET)
-    public String toconsole() {
-        return "console";
-    }
-
-    @RequestMapping(value="client/add",method = RequestMethod.POST)
-    @ResponseBody
-    public void addClient(@RequestBody Manager m1){//方法参数必须可以获取到表单数据
-        System.out.println("从前端ajax传过来的数据1为***************"+m1.getMngId());
-        System.out.println("从前端ajax传过来的数据2为***************"+m1.getMngPwd());}
-
     @ResponseBody
     @RequestMapping(value = "login",method = {RequestMethod.POST})
     public String longin(HttpServletRequest req) {
@@ -88,11 +64,11 @@ public class UserController {
             //代表登录成功
             map.put("code",200);
             System.out.println("登录成功");
-//            //生成Token令牌
-//            String token = UUID.randomUUID() + "";
-//            //存到Redis数据库
-//            redisTemplate.opsForValue().set(token, m1, Duration.ofDays(1));
-//            map.put("token", token);
+            //生成Token令牌
+            String token = UUID.randomUUID() + "";
+            //存到Redis数据库
+            redisTemplate.opsForValue().set(token, m1, Duration.ofDays(1));
+            map.put("token", token);
         }
         return JSON.toJSONString(map);
     }
