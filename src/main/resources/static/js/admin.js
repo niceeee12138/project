@@ -159,7 +159,7 @@ function execute_open(title, url, width, height) {
         shadeClose: true,
         shade: 0.8,
         area: [''+ width +'px', ''+ height +'px'],
-        content: ''+url +'',
+        content:url ,
     });
 }
 

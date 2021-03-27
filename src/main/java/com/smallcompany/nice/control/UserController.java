@@ -46,17 +46,17 @@ public class UserController {
     @RequestMapping(value = "login",method = {RequestMethod.POST})
     public String longin(HttpServletRequest req) {
         HashMap<String, Object> map = new HashMap<>();
-        Manager m1 = new Manager();
+        Manager m = new Manager();
         String mngId=req.getParameter("mngId");
         String mngPwd=req.getParameter("mngPwd");
         Integer mngIdInt = null;
         if(mngId!=null){
             mngIdInt = Integer.valueOf(mngId);
         }
-        m1.setMngId(mngIdInt);
-        m1.setMngPwd(mngPwd);
+        m.setMngId(mngIdInt);
+        m.setMngPwd(mngPwd);
 //        System.out.println(m);
-//        Manager m1 = userService.isLogin(m);
+   Manager m1 = userService.isLogin(m);
         if (m1 == null) {
             //代表登录失败
             map.put("code",0);

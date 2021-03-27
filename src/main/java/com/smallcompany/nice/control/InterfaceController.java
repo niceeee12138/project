@@ -53,7 +53,7 @@ public class InterfaceController {
     }
 
     //@ResponseBody
-    @RequestMapping(value = {"admin-operation"}, method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = {"admin-operation"}, method =RequestMethod.GET)
     public String toAddAdmin() {
         return "admin-operation";
     }
