@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>后台管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="css/admin.css" media="all">
+</head>
+<body>
+<form class="layui-form" id="register" enctype="multipart/form-data">
+    <!--        头像-->
+    <!--        <div class="layui-form-item">-->
+    <!--            <label class="layui-form-label">头像:</label>-->
+    <!--            <div class="layui-upload">-->
+    <!--                <button type="button" class="layui-btn" id="test1">上传图片</button>-->
+    <!--                <div class="layui-upload-list head-portrait">-->
+    <!--                    <img class="layui-upload-img" id="demo1" style="width:100px;height: 100px;margin-left: 100px ">-->
+    <!--                    <p id="demoText" style="margin-left: 100px"></p>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        用户名-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名:</label>
+        <div class="layui-input-block">
+            <input type="text" id="username" lay-verify="required" autocomplete="off" placeholder="请输入用户名" class="layui-input">
+        </div>
+    </div>
+    <!--        性别-->
+    <div class="layui-form-item" pane="">
+        <label class="layui-form-label">性别:</label>
+        <div class="layui-input-block">
+            <input type="radio" name="sex" id="sexMan" value="男" title="男" checked="true">
+            <input type="radio" name="sex" id="sexWoman" value="女" title="女">
+        </div>
+    </div>
+    <!--       年龄 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label">年&nbsp;&nbsp;龄:</label>
+        <div class="layui-input-block">
+            <input type="text" id="age" lay-verify="required" autocomplete="off" placeholder="请输入年龄" class="layui-input">
+        </div>
+    </div>
+    <!--        邮箱-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮&nbsp;&nbsp;箱:</label>
+        <div class="layui-input-block">
+            <input type="text" id="email" lay-verify="email" autocomplete="off" placeholder="请输入邮箱" class="layui-input">
+        </div>
+    </div>
+    <!--        个性签名-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">个性签名:</label>
+        <div class="layui-input-block">
+            <input type="text" id="autograph" lay-verify="required" autocomplete="off" placeholder="请输入个性签名" class="layui-input">
+        </div>
+    </div>
+    <!--        pwd-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码:</label>
+        <div class="layui-input-block">
+            <input type="password" id="pwd" lay-verify="required" autocomplete="off" placeholder="请输入密码:" class="layui-input">
+        </div>
+    </div>
+    <!--        确认密码-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">确认密码:</label>
+        <div class="layui-input-block">
+            <input type="password" id="confirm-pwd" lay-verify="required" autocomplete="off" placeholder="请确认密码:" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item submit">
+        <!--            <input type="button" name="confirm-pwd" value="注册" class="layui-btn">-->
+        <input type="button" id="submit-btn" value="注册" class="layui-btn" lay-submit="" lay-filter="sub">
+        <input type="reset" value="取消" class="layui-btn" >
+    </div>
+
+</form>
+
+<script src="js/register.js"></script>
+
+</body>
+</html>

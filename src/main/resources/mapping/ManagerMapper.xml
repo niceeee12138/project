@@ -29,7 +29,7 @@
     delete from manager
     where mng_id = #{mngId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.smallcompany.nice.model.Manager" >
+  <insert id="insert" parameterType="com.smallcompany.nice.model.Manager" useGeneratedKeys="true" keyProperty="mngId">
     insert into manager (mng_id, mng_name, mng_number, 
       mng_status, mng_headshot, mng_tel, 
       mng_pwd)

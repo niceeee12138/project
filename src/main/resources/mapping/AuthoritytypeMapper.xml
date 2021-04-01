@@ -10,6 +10,14 @@
   <sql id="Base_Column_List" >
     at_id, at_power, at_name, at_sort
   </sql>
+  <sql id="Base_Column_List1" >
+    at_id, at_power, at_name, at_sort
+  </sql>
+  <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List1" />
+    from authoritytype
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -26,7 +34,7 @@
     delete from authoritytype
     where at_id = #{atId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.smallcompany.nice.model.Authoritytype" >
+  <insert id="insert" parameterType="com.smallcompany.nice.model.Authoritytype" useGeneratedKeys="true" keyProperty="atId">
     insert into authoritytype (at_id, at_power, at_name, 
       at_sort)
     values (#{atId,jdbcType=INTEGER}, #{atPower,jdbcType=VARCHAR}, #{atName,jdbcType=VARCHAR}, 
