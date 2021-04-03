@@ -58,27 +58,31 @@ public class InterfaceController {
     }
 
     //添加管理员
-    @RequestMapping(value = {"admin-operation"}, method =RequestMethod.GET)
+    @RequestMapping(value = {"admin-operation"}, method = RequestMethod.GET)
     public String toAddAdmin() {
         return "admin-operation";
     }
 
     //添加权限
-    @RequestMapping(value = {"auth_operation"}, method =RequestMethod.GET)
+    @RequestMapping(value = {"auth_operation"}, method = RequestMethod.GET)
     public String toAddAdminType() {
         return "auth_operation";
     }
 
     //添加人员
-    @RequestMapping(value = {"article_operation"}, method =RequestMethod.GET)
+    @RequestMapping(value = {"article_operation"}, method = RequestMethod.GET)
     public String toAddPeople() {
         return "article_operation";
     }
 
     //添加人员类型
-    @RequestMapping(value = {"article_category_operation"}, method =RequestMethod.GET)
+    @RequestMapping(value = {"article_category_operation"}, method = RequestMethod.GET)
     public String toAddPeopleType() {
         return "article_category_operation";
     }
 
+    @RequestMapping(value = {"article_category_operation_edit"}, method = RequestMethod.GET)
+    public String toEditPeopleType() {
+        return "article_category_operation_edit";
+    }
 }

@@ -9,7 +9,6 @@ package com.smallcompany.nice.control;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.smallcompany.nice.dao.ManagerMapper;
 import com.smallcompany.nice.model.Authoritytype;
 import com.smallcompany.nice.model.Manager;
@@ -27,7 +26,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -124,17 +122,45 @@ public class UserController {
     }
 
 
-    //TODOSong:getManages接口的编写
 
+    /**
+            * @Description: 退出登录 
+            * @Param: [object]
+            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
+            * @Author: Song 
+            * @Date: 2021/2/25
+            */
+         
+    @RequestMapping(value = "/signOut", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    @RequestMapping(value = "getManagers", method =  RequestMethod.POST)
-    public String getManagers(HttpServletRequest req) {
-        HashMap<Object, Object> map = new HashMap<>();
-        List<Manager> managers=userService.findAllManagers();
-        map.put("code",200);
-        map.put("msg","");
-        map.put("data",managers);
-        map.put("count",managers.size());
-        return JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect);
+    public String signOut(HttpServletRequest req) {
+        return null;
     }
+
+    /**
+            * @Description: 添加管理员类型 
+            * @Param: [authoritytype] 
+            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
+            * @Author: Song 
+            * @Date: 2021/2/23
+            */
+         
+    @RequestMapping(value = "/addManagerType", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String addManagerType(HttpServletRequest req) {
+        return null;
+    }
+
+    @RequestMapping(value = "/editManager", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public HashMap<String, Object> editManager(@RequestBody JSONArray jsonArray) {
+        String token = (String) jsonArray.getJSONObject(0).get("token");
+        System.out.println(token);
+        Object manager1 = redisTemplate.opsForValue().get(token);
+        HashMap<String, Object> map = new HashMap<>();
+        
+        return map;
+    }
+
+
 }

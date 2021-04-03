@@ -3,8 +3,6 @@ package com.smallcompany.nice.service;
 import com.smallcompany.nice.model.Authoritytype;
 import com.smallcompany.nice.model.Manager;
 
-import java.util.List;
-
 /**
  * @Author Song
  * @Date 2021/3/14 21:11
@@ -20,6 +18,4 @@ public interface UserService {
     public Manager isLogin(Manager m);
 
     public Authoritytype insertAuthoritytype(Authoritytype a);
-
-    public List<Manager> findAllManagers();
 }

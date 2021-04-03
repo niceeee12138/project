@@ -3,6 +3,8 @@ package com.smallcompany.nice.dao;
 import com.smallcompany.nice.model.Peolpletype;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository(value = "peolpletypeMapper")
 public interface PeolpletypeMapper {
     int deleteByPrimaryKey(Integer ptId);
@@ -16,4 +18,8 @@ public interface PeolpletypeMapper {
     int updateByPrimaryKeySelective(Peolpletype record);
 
     int updateByPrimaryKey(Peolpletype record);
+
+    Peolpletype selectByPtName(String PtName);
+
+    List<Peolpletype> getAllType();
 }
