@@ -9,11 +9,10 @@ package com.smallcompany.nice.control;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.smallcompany.nice.dao.ManagerMapper;
-import com.smallcompany.nice.model.Authoritytype;
-import com.smallcompany.nice.model.Manager;
-import com.smallcompany.nice.model.Mng_atKey;
-import com.smallcompany.nice.model.ResponseJson;
+import com.smallcompany.nice.dao.PeolpletypeMapper;
+import com.smallcompany.nice.model.*;
 import com.smallcompany.nice.service.TypeService;
 import com.smallcompany.nice.service.UserService;
 import com.smallcompany.nice.until.Tool;
@@ -26,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,6 +40,8 @@ public class UserController {
     private TypeService typeService;
     @Resource(name = "managerMapper")
     private ManagerMapper managerMapper;
+    @Resource(name = "peolpletypeMapper")
+    private PeolpletypeMapper peolpletypeMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     /**
@@ -122,45 +124,103 @@ public class UserController {
     }
 
 
+    //TODOSong:getManages接口的编写
 
-    /**
-            * @Description: 退出登录 
-            * @Param: [object]
-            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
-            * @Author: Song 
-            * @Date: 2021/2/25
-            */
-         
-    @RequestMapping(value = "/signOut", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public String signOut(HttpServletRequest req) {
-        return null;
+    @RequestMapping(value = "getManagers", method =  RequestMethod.POST)
+    public String getManagers(HttpServletRequest req) {
+        HashMap<Object, Object> map = new HashMap<>();
+        List<Manager> managers=userService.findAllManagers();
+        map.put("code",200);
+        map.put("msg","");
+        map.put("data",managers);
+        map.put("count",managers.size());
+        return JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect);
     }
 
-    /**
-            * @Description: 添加管理员类型 
-            * @Param: [authoritytype] 
-            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
-            * @Author: Song 
-            * @Date: 2021/2/23
-            */
-         
-    @RequestMapping(value = "/addManagerType", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public String addManagerType(HttpServletRequest req) {
-        return null;
+    @RequestMapping(value = "getManagerTypes", method =  RequestMethod.POST)
+    public String getManagerTypes(HttpServletRequest req) {
+        HashMap<Object, Object> map = new HashMap<>();
+        List<Authoritytype> authoritytypes=typeService.getTypes();
+        map.put("code",200);
+        map.put("msg","");
+        map.put("data",authoritytypes);
+        map.put("count",authoritytypes.size());
+        return JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect);
     }
 
-    @RequestMapping(value = "/editManager", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public HashMap<String, Object> editManager(@RequestBody JSONArray jsonArray) {
-        String token = (String) jsonArray.getJSONObject(0).get("token");
-        System.out.println(token);
-        Object manager1 = redisTemplate.opsForValue().get(token);
+    @RequestMapping(value = "addPeopleType", method = RequestMethod.POST)
+    public String addPeopleType(HttpServletRequest req) {
         HashMap<String, Object> map = new HashMap<>();
-        
-        return map;
+        Peolpletype pt = new Peolpletype();
+        String ptName = req.getParameter("ptName");
+        Integer ptSort = Integer.parseInt(req.getParameter("ptSort"));
+        pt.setPtName(ptName);
+        pt.setPtSort(ptSort);
+        pt.setPtStatus(1);
+        Peolpletype pt1 = peolpletypeMapper.selectByPtName(ptName);
+        if (pt1==null) {
+            userService.insertPeolpleType(pt);
+            map.put("code", 200);
+            System.out.println("添加成功");
+        } else {
+            map.put("code", 0);
+            System.out.println("添加失败");
+        }
+        return JSON.toJSONString(map);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "editPeopleType", method = RequestMethod.POST)
+    public String editPeopleType(HttpServletRequest req) {
+        HashMap<String, Object> map = new HashMap<>();
+        Peolpletype pt = new Peolpletype();
+        Integer ptId=Integer.parseInt(req.getParameter("ptId"));
+        String ptName = req.getParameter("ptName");
+        Integer ptSort = Integer.parseInt(req.getParameter("ptSort"));
+        pt.setPtId(ptId);
+        pt.setPtName(ptName);
+        pt.setPtSort(ptSort);
 
+        Peolpletype pt1 = peolpletypeMapper.selectByPrimaryKey(ptId);
+        if (pt1!=null) {
+            userService.updateByptId(pt);
+            map.put("code", 200);
+            System.out.println("修改成功");
+        } else {
+            map.put("code", 0);
+            System.out.println("修改失败");
+        }
+        return JSON.toJSONString(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "delPeopleType", method = RequestMethod.POST)
+    public String delPeopleType(HttpServletRequest req) {
+        HashMap<String, Object> map = new HashMap<>();
+
+        Integer ptId=Integer.parseInt(req.getParameter("id"));
+
+        Peolpletype pt1 = peolpletypeMapper.selectByPrimaryKey(ptId);
+        if (pt1!=null) {
+            userService.delPTByptId(ptId);
+            map.put("code", 200);
+            System.out.println("删除成功");
+        } else {
+            map.put("code", 0);
+            System.out.println("此人员类型不存在");
+        }
+        return JSON.toJSONString(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "getAllPeopleType", method = RequestMethod.POST)
+    public String getAllPeopleType(){
+        HashMap<String, Object> map = new HashMap<>();
+        List<Peolpletype> pt=userService.getAllPeopleType();
+        map.put("pt",pt);
+        return JSON.toJSONString(map);
+    }
 }

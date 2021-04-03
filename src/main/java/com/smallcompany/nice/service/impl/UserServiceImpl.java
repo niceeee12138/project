@@ -2,14 +2,19 @@ package com.smallcompany.nice.service.impl;
 
 import com.smallcompany.nice.dao.AuthoritytypeMapper;
 import com.smallcompany.nice.dao.ManagerMapper;
+import com.smallcompany.nice.dao.Mng_atMapper;
+import com.smallcompany.nice.dao.PeolpletypeMapper;
 import com.smallcompany.nice.model.Authoritytype;
 import com.smallcompany.nice.model.Manager;
+import com.smallcompany.nice.model.Mng_atKey;
+import com.smallcompany.nice.model.Peolpletype;
 import com.smallcompany.nice.service.UserService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author Song
@@ -22,6 +27,10 @@ public class UserServiceImpl implements UserService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource(name = "managerMapper")
     private ManagerMapper managerMapper;
+    @Resource(name = "mng_atMapper")
+    private Mng_atMapper mngAtMapper;
+    @Resource(name = "peolpletypeMapper")
+    private PeolpletypeMapper peolpletypeMapper;
     @Resource(name = "authoritytypeMapper")
     private AuthoritytypeMapper authoritytypeMapper;
     @Override
@@ -71,5 +80,47 @@ public class UserServiceImpl implements UserService {
         authoritytypeMapper.insert(a);
         System.out.println(a.getAtId());
         return a;
+    }
+
+    @Override
+    public List<Manager> findAllManagers(){
+        List<Manager> managers=managerMapper.findAll();
+        for (Manager manager:managers
+             ) {
+            Mng_atKey mngAtKey=mngAtMapper.selectByKey(manager.getMngId());
+            if (mngAtKey.getAtId()!=null){
+                Authoritytype authoritytype=authoritytypeMapper.selectByPrimaryKey(mngAtKey.getAtId());
+                manager.setAtName(authoritytype.getAtName());
+                manager.setAtPower(authoritytype.getAtPower());
+            }
+        }
+        return managers;
+    }
+
+    @Override
+    @Transactional
+    public void insertPeolpleType(Peolpletype pt) {
+        peolpletypeMapper.insert(pt);
+        System.out.println(pt.getPtId());
+
+    }
+
+    @Override
+    @Transactional
+    public void updateByptId(Peolpletype pt) {
+        peolpletypeMapper.updateByPrimaryKeySelective(pt);
+
+
+    }
+
+    @Override
+    public void delPTByptId(Integer id) {
+        peolpletypeMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Peolpletype> getAllPeopleType() {
+        System.out.println(peolpletypeMapper.getAllType());
+        return peolpletypeMapper.getAllType();
     }
 }
