@@ -2,6 +2,9 @@ package com.smallcompany.nice.service;
 
 import com.smallcompany.nice.model.Authoritytype;
 import com.smallcompany.nice.model.Manager;
+import com.smallcompany.nice.model.Peolpletype;
+
+import java.util.List;
 
 /**
  * @Author Song
@@ -18,4 +21,14 @@ public interface UserService {
     public Manager isLogin(Manager m);
 
     public Authoritytype insertAuthoritytype(Authoritytype a);
+
+    public void insertPeolpleType(Peolpletype pt);
+
+    public void updateByptId(Peolpletype pt);
+
+    public void delPTByptId(Integer id);
+
+    public List<Peolpletype> getAllPeopleType();
+
+
 }

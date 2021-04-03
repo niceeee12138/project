@@ -9,15 +9,15 @@ package com.smallcompany.nice.control;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.smallcompany.nice.dao.ManagerMapper;
-import com.smallcompany.nice.model.Authoritytype;
-import com.smallcompany.nice.model.Manager;
-import com.smallcompany.nice.model.Mng_atKey;
-import com.smallcompany.nice.model.ResponseJson;
+import com.smallcompany.nice.dao.PeolpletypeMapper;
+import com.smallcompany.nice.model.*;
 import com.smallcompany.nice.service.TypeService;
 import com.smallcompany.nice.service.UserService;
 import com.smallcompany.nice.until.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.PassThroughExceptionTranslationStrategy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,8 +41,11 @@ public class UserController {
     private TypeService typeService;
     @Resource(name = "managerMapper")
     private ManagerMapper managerMapper;
+    @Resource(name = "peolpletypeMapper")
+    private PeolpletypeMapper peolpletypeMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
     /**
      * @Description: 登录
      * @Param: [User]
@@ -50,26 +54,26 @@ public class UserController {
      * @Date: 2020/10/25
      */
     @ResponseBody
-    @RequestMapping(value = "login",method = {RequestMethod.POST})
+    @RequestMapping(value = "login", method = {RequestMethod.POST})
     public String longin(HttpServletRequest req) {
         HashMap<String, Object> map = new HashMap<>();
         Manager m = new Manager();
-        String mngId=req.getParameter("mngId");
-        String mngPwd=req.getParameter("mngPwd");
+        String mngId = req.getParameter("mngId");
+        String mngPwd = req.getParameter("mngPwd");
         Integer mngIdInt = null;
-        if(mngId!=null){
+        if (mngId != null) {
             mngIdInt = Integer.valueOf(mngId);
         }
         m.setMngId(mngIdInt);
         m.setMngPwd(mngPwd);
 //        System.out.println(m);
-   Manager m1 = userService.isLogin(m);
+        Manager m1 = userService.isLogin(m);
         if (m1 == null) {
             //代表登录失败
-            map.put("code",0);
+            map.put("code", 0);
         } else {
             //代表登录成功
-            map.put("code",200);
+            map.put("code", 200);
             System.out.println("登录成功");
             //生成Token令牌
             String token = UUID.randomUUID() + "";
@@ -88,16 +92,15 @@ public class UserController {
      * @Date: 2020/11/17
      */
     @ResponseBody
-    @RequestMapping(value = "register", method =  RequestMethod.POST)
+    @RequestMapping(value = "register", method = RequestMethod.POST)
     public String register(HttpServletRequest req) {
         HashMap<String, Object> map = new HashMap<>();
         Manager m = new Manager();
-
-        String mngNumber=req.getParameter("mngNumber");
-        String mngPwd=req.getParameter("mngPwd");
-        Integer mngTypeId=Integer.parseInt(req.getParameter("mngType"));
-        String mngName=req.getParameter("mngName");
-        String mngMobile=req.getParameter("mngMobile");
+        String mngNumber = req.getParameter("mngNumber");
+        String mngPwd = req.getParameter("mngPwd");
+        Integer mngTypeId = Integer.parseInt(req.getParameter("mngType"));
+        String mngName = req.getParameter("mngName");
+        String mngMobile = req.getParameter("mngMobile");
         m.setMngNumber(mngNumber);
         m.setMngStatus(1);
         m.setMngName(mngName);
@@ -105,32 +108,30 @@ public class UserController {
         m.setMngPwd(mngPwd);
 
         Integer id = managerMapper.selectByTel(mngMobile).getMngId();
-        if (id!=null){
+        if (id != null) {
             //代表登录失败
-            map.put("code",0);
+            map.put("code", 0);
             System.out.println("注册失败");
 
-        }
-        else {
-            Manager m1=userService.insertManager(m);
-            Mng_atKey mng_atKey=typeService.insertMngAt(m1.getMngId(),mngTypeId);
+        } else {
+            Manager m1 = userService.insertManager(m);
+            Mng_atKey mng_atKey = typeService.insertMngAt(m1.getMngId(), mngTypeId);
             //代表登录成功
-            map.put("code",200);
+            map.put("code", 200);
             System.out.println("注册成功");
         }
         return JSON.toJSONString(map);
     }
 
 
-
     /**
-            * @Description: 退出登录 
-            * @Param: [object]
-            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
-            * @Author: Song 
-            * @Date: 2021/2/25
-            */
-         
+     * @Description: 退出登录
+     * @Param: [object]
+     * @return: java.util.HashMap<java.lang.String, java.lang.Object>
+     * @Author: Song
+     * @Date: 2021/2/25
+     */
+
     @RequestMapping(value = "/signOut", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String signOut(HttpServletRequest req) {
@@ -138,13 +139,13 @@ public class UserController {
     }
 
     /**
-            * @Description: 添加管理员类型 
-            * @Param: [authoritytype] 
-            * @return: java.util.HashMap<java.lang.String,java.lang.Object> 
-            * @Author: Song 
-            * @Date: 2021/2/23
-            */
-         
+     * @Description: 添加管理员类型
+     * @Param: [authoritytype]
+     * @return: java.util.HashMap<java.lang.String, java.lang.Object>
+     * @Author: Song
+     * @Date: 2021/2/23
+     */
+
     @RequestMapping(value = "/addManagerType", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String addManagerType(HttpServletRequest req) {
@@ -158,9 +159,89 @@ public class UserController {
         System.out.println(token);
         Object manager1 = redisTemplate.opsForValue().get(token);
         HashMap<String, Object> map = new HashMap<>();
-        
+
         return map;
     }
 
+    /**
+     * @Description: 注册(添加管理员)
+     * @Param: User
+     * @return: java.util.Map<java.lang.String, java.lang.Object>
+     * @Author: Song
+     * @Date: 2020/11/17
+     */
+    @ResponseBody
+    @RequestMapping(value = "addPeopleType", method = RequestMethod.POST)
+    public String addPeopleType(HttpServletRequest req) {
+        HashMap<String, Object> map = new HashMap<>();
+        Peolpletype pt = new Peolpletype();
+        String ptName = req.getParameter("ptName");
+        Integer ptSort = Integer.parseInt(req.getParameter("ptSort"));
+        pt.setPtName(ptName);
+        pt.setPtSort(ptSort);
+        pt.setPtStatus(1);
+        Peolpletype pt1 = peolpletypeMapper.selectByPtName(ptName);
+        if (pt1==null) {
+            userService.insertPeolpleType(pt);
+            map.put("code", 200);
+            System.out.println("添加成功");
+        } else {
+            map.put("code", 0);
+            System.out.println("添加失败");
+        }
+        return JSON.toJSONString(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "editPeopleType", method = RequestMethod.POST)
+    public String editPeopleType(HttpServletRequest req) {
+        HashMap<String, Object> map = new HashMap<>();
+        Peolpletype pt = new Peolpletype();
+        Integer ptId=Integer.parseInt(req.getParameter("ptId"));
+        String ptName = req.getParameter("ptName");
+        Integer ptSort = Integer.parseInt(req.getParameter("ptSort"));
+        pt.setPtId(ptId);
+        pt.setPtName(ptName);
+        pt.setPtSort(ptSort);
+
+        Peolpletype pt1 = peolpletypeMapper.selectByPrimaryKey(ptId);
+        if (pt1!=null) {
+            userService.updateByptId(pt);
+            map.put("code", 200);
+            System.out.println("修改成功");
+        } else {
+            map.put("code", 0);
+            System.out.println("修改失败");
+        }
+        return JSON.toJSONString(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "delPeopleType", method = RequestMethod.POST)
+    public String delPeopleType(HttpServletRequest req) {
+        HashMap<String, Object> map = new HashMap<>();
+
+        Integer ptId=Integer.parseInt(req.getParameter("id"));
+
+        Peolpletype pt1 = peolpletypeMapper.selectByPrimaryKey(ptId);
+        if (pt1!=null) {
+userService.delPTByptId(ptId);
+            map.put("code", 200);
+            System.out.println("删除成功");
+        } else {
+            map.put("code", 0);
+            System.out.println("此人员类型不存在");
+        }
+        return JSON.toJSONString(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "getAllPeopleType", method = RequestMethod.POST)
+    public String getAllPeopleType(){
+        HashMap<String, Object> map = new HashMap<>();
+        List<Peolpletype> pt=userService.getAllPeopleType();
+        map.put("pt",pt);
+        return JSON.toJSONString(map);
+    }
 
 }
