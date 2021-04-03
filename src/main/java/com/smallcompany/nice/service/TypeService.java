@@ -14,4 +14,6 @@ public interface TypeService {
     public Mng_atKey insertMngAt(Integer mngId, Integer typeId);
 
     public List<Authoritytype> getTypes();
+
+    public Integer addAtType(Authoritytype authoritytype);
 }

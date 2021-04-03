@@ -5,11 +5,20 @@
     <id column="at_id" property="atId" jdbcType="INTEGER" />
     <id column="mng_id" property="mngId" jdbcType="INTEGER" />
   </resultMap>
+  <sql id="Base_Column_List" >
+    at_id,mng_id
+  </sql>
   <delete id="deleteByPrimaryKey" parameterType="com.smallcompany.nice.model.Mng_atKey" >
     delete from mng_at
     where at_id = #{atId,jdbcType=INTEGER}
       and mng_id = #{mngId,jdbcType=INTEGER}
   </delete>
+  <select id="selectByKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from mng_at
+    where mng_id = #{mngId,jdbcType=INTEGER}
+  </select>
   <insert id="insert" parameterType="com.smallcompany.nice.model.Mng_atKey" >
     insert into mng_at (at_id, mng_id)
     values (#{atId,jdbcType=INTEGER}, #{mngId,jdbcType=INTEGER})

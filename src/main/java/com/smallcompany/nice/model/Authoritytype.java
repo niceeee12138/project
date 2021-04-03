@@ -9,6 +9,10 @@ public class Authoritytype {
 
     private Integer atSort;
 
+    private Integer atEdit;
+
+    private Integer atAdd;
+
     public Integer getAtId() {
         return atId;
     }
@@ -39,5 +43,21 @@ public class Authoritytype {
 
     public void setAtSort(Integer atSort) {
         this.atSort = atSort;
+    }
+
+    public Integer getAtEdit() {
+        return atEdit;
+    }
+
+    public void setAtEdit(Integer atEdit) {
+        this.atEdit = atEdit;
+    }
+
+    public Integer getAtAdd() {
+        return atAdd;
+    }
+
+    public void setAtAdd(Integer atAdd) {
+        this.atAdd = atAdd;
     }
 }

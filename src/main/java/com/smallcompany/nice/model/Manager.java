@@ -15,6 +15,26 @@ public class Manager {
 
     private String mngPwd;
 
+    private String atPower;
+
+    private String atName;
+
+    public String getAtPower() {
+        return atPower;
+    }
+
+    public void setAtPower(String atPower) {
+        this.atPower = atPower;
+    }
+
+    public String getAtName() {
+        return atName;
+    }
+
+    public void setAtName(String atName) {
+        this.atName = atName;
+    }
+
     public Integer getMngId() {
         return mngId;
     }

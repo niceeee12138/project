@@ -16,24 +16,16 @@
 					<div class="layui-form-item">
 						<label class="layui-form-label">管理权限</label>
 						<div class="layui-input-inline layer-inputs">
-							<select name="pid" id="pid" lay-filter="pid">
-								<option value="0" selected="selected">超级管理员</option>
-								<option value="1">普通管理员</option>
-							</select>
+							<div class="layui-input-inline layer-inputs">
+								<input type="text" name="atPower" id="atPower" value="" placeholder="请输入管理权限名称" class="layui-input">
+							</div>
 						</div>
-						<div class="layui-form-mid layui-word-aux">请选择管理员权限状态</div>
+						<div class="layui-form-mid layui-word-aux">请输入管理权限名称</div>
 					</div>
-<!--					<div class="layui-form-item">-->
-<!--						<label class="layui-form-label">ID</label>-->
-<!--						<div class="layui-input-inline layer-inputs">-->
-<!--							<input type="text" name="name" id="name" value="" placeholder="请输入管理员ID" class="layui-input">-->
-<!--						</div>-->
-<!--						<div class="layui-form-mid layui-word-aux">请输入管理员ID</div>-->
-<!--					</div>-->
 					<div class="layui-form-item">
 						<label class="layui-form-label">职位名称</label>
 						<div class="layui-input-inline layer-inputs">
-							<input type="text" name="controller" id="controller" value="" placeholder="请输入职位名称" class="layui-input">
+							<input type="text" name="atName" id="atName" value="" placeholder="请输入职位名称" class="layui-input">
 						</div>
 						<div class="layui-form-mid layui-word-aux">请输入职位名称</div>
 					</div>
@@ -55,14 +47,36 @@
 					<div class="layui-form-item">
 						<label class="layui-form-label">排序值</label>
 						<div class="layui-input-inline layer-inputs">
-							<input type="number" min="0" name="sort" id="sort" placeholder="栏目排序值" value="0" class="layui-input">
+							<input type="number" min="0" name="atSort" id="atSort" placeholder="栏目排序值" value="0" class="layui-input">
 						</div>
 						<div class="layui-form-mid layui-word-aux">从小到大排序,越小越在前</div>
 					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">是否赋予编辑权限</label>
+						<div class="layui-input-inline layer-inputs">
+							<select name="atEdit" id="atEdit">
+								<option value="1">是</option>
+								<option value="2">否</option>
+							</select>
+						</div>
+						<div class="layui-form-mid layui-word-aux">选择是否赋予编辑权限</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">是否赋予添加权限</label>
+						<div class="layui-input-inline layer-inputs">
+							<select name="atAdd" id="atAdd">
+								<option value="1">是</option>
+								<option value="2">否</option>
+							</select>
+						</div>
+						<div class="layui-form-mid layui-word-aux">选择是否赋予添加权限</div>
+					</div>
+
 					<div class="layui-form-item" style="margin-left: 50px;">
-						<input type="hidden" name="id" id="id" value="">
-						<input type="hidden" name="request_url" id="request_url" value="">
-						<button class="layui-btn" id="execute" lay-submit="execute" lay-filter="execute"><i class="layui-icon layui-icon-form"></i>保存</button>
+<!--						<input type="hidden" name="id" id="id" value="">-->
+<!--						<input type="hidden" name="request_url" id="request_url" value="">-->
+<!--						<button class="layui-btn" id="execute" lay-submit="execute" lay-filter="execute"><i class="layui-icon layui-icon-form"></i>保存</button>-->
+						<input type="button" id="submit-btn-addType" value="保存" class="layui-btn" lay-submit="execute1" lay-filter="execute1">
 					</div>
 				</form>
 			</div>

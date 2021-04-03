@@ -52,38 +52,40 @@
 					</div>
 					<div class="layui-card-header">
 
-						<button class="layui-btn" onclick="execute_open('添加管理员', 'admin-operation', '700', '500')"><i class="layui-icon"></i>添加管理员</button>
+						<button class="layui-btn" onclick="execute_open('添加管理员', 'admin-operation', '700', '500')"><i class="layui-icon">
+						</i>添加管理员</button>
+						<input type="button" id="getManagers" value="刷新用户" class="layui-btn" lay-submit="getManagers" lay-filter="getManagers">
 					</div>
 					<div class="layui-card-body">
 						<table class="layui-table layui-form">
 							<thead>
 								<tr>
-									<th>序号</th>
+<!--									<th>序号</th>-->
 									<th>ID</th>
-									<th>管理员头像</th>
+<!--									<th>管理员头像</th>-->
 									<th>管理员名称</th>
 									<th>职位名称</th>
 									<th>管理员账号</th>
 									<th>管理员角色</th>
-									<th>状态</th>
-									<th>管理</th>
+<!--									<th>状态</th>-->
+<!--									<th>管理</th>-->
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>1</td>
-									<td>1</td>
-									<td><img src="images/logins.png" style="width: 50px;height: 50px;border-radius: 50%;"></td>
-									<td>张三</td>
-									<td>HR</td>
-									<td>admin</td>	
-									<td>超级管理员</td>
-									<td><input type="checkbox" name="switch" lay-skin="switch" data-url="" value="1" data-id="1" title="状态" lay-text="开启|禁止" checked="checked"></td>
-									<td>
-										<a class="layui-btn layui-btn-sm layui-btn-normal" title="编辑" onclick="execute_open('编辑管理员', 'admin_operation.html?id=1', 1000, 700)" href="javascript:;"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-										<a class="layui-btn layui-btn-sm layui-btn-danger" title="删除" onclick="execute_del(this, 1, '')" href="javascript:;"><i class="layui-icon layui-icon-delete"></i>删除</a>
-									</td>
-								</tr>
+							<tbody name="manageInfo" lay-filter="manageInfo" id="manageInfo">
+<!--								<tr id="manageInfo">-->
+<!--									<td>1</td>-->
+<!--									<td>1</td>-->
+<!--									<td><img src="images/logins.png" style="width: 50px;height: 50px;border-radius: 50%;"></td>-->
+<!--									<td>张三</td>-->
+<!--									<td>HR</td>-->
+<!--									<td>admin</td>	-->
+<!--									<td>超级管理员</td>-->
+<!--&lt;!&ndash;									<td><input type="checkbox" name="switch" lay-skin="switch" data-url="" value="1" data-id="1" title="状态" lay-text="开启|禁止" checked="checked"></td>&ndash;&gt;-->
+<!--									<td>-->
+<!--										<a class="layui-btn layui-btn-sm layui-btn-normal" title="编辑" onclick="execute_open('编辑管理员', 'admin_operation.html?id=1', 1000, 700)" href="javascript:;"><i class="layui-icon layui-icon-edit"></i>编辑</a>-->
+<!--										<a class="layui-btn layui-btn-sm layui-btn-danger" title="删除" onclick="execute_del(this, 1, '')" href="javascript:;"><i class="layui-icon layui-icon-delete"></i>删除</a>-->
+<!--									</td>-->
+<!--								</tr>-->
 								<!--<tr>
 									<td>1</td>
 									<td>1</td>

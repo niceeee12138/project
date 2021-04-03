@@ -10,4 +10,6 @@ public interface Mng_atMapper {
     int insert(Mng_atKey record);
 
     int insertSelective(Mng_atKey record);
+
+    Mng_atKey selectByKey(Integer mngId);
 }

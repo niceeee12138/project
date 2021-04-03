@@ -1,6 +1,7 @@
 package com.smallcompany.nice.control;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.smallcompany.nice.dao.AuthoritytypeMapper;
 import com.smallcompany.nice.dao.ManagerMapper;
 import com.smallcompany.nice.model.Authoritytype;
@@ -32,10 +33,35 @@ public class TypeController {
     @ResponseBody
     @RequestMapping(value = "getType",method = {RequestMethod.POST,RequestMethod.GET})
     public String getType(HttpServletRequest req) {
-        HashMap<String, Object> map = new HashMap<>();
+        HashMap<Object, Object> map = new HashMap<>();
         List<Authoritytype> authoritytypes=typeService.getTypes();
         map.put("code",200);
-        map.put("authoritytypes",authoritytypes);
-        return JSON.toJSONString(map);
+        map.put("msg","");
+        map.put("data",authoritytypes);
+        map.put("count",authoritytypes.size());
+        return JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect);
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "addAtType",method = {RequestMethod.POST,RequestMethod.GET})
+    public String addAtType(HttpServletRequest req) {
+        HashMap<Object, Object> map = new HashMap<>();
+        Authoritytype authoritytype=new Authoritytype();
+        String atPower=req.getParameter("atPower");
+        String atName=req.getParameter("atName");
+        Integer atSort=Integer.parseInt(req.getParameter("atSort"));
+        Integer atEdit=Integer.parseInt(req.getParameter("atEdit"));
+        Integer atAdd=Integer.parseInt(req.getParameter("atAdd"));
+        authoritytype.setAtPower(atPower);
+        authoritytype.setAtName(atName);
+        authoritytype.setAtSort(atSort);
+        authoritytype.setAtEdit(atEdit);
+        authoritytype.setAtAdd(atAdd);
+        Integer atId=typeService.addAtType(authoritytype);
+
+        map.put("code",200);
+        map.put("msg","");
+        map.put("atId",atId);
+        return JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect);
     }
 }

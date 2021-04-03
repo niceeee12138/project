@@ -41,4 +41,11 @@ public class TypeServiceImpl implements TypeService {
         List<Authoritytype> authoritytypes=authoritytypeMapper.findAll();
         return authoritytypes;
     }
+
+    @Override
+    public Integer addAtType(Authoritytype authoritytype){
+        Integer atId=authoritytypeMapper.insert(authoritytype);
+        //Authoritytype authoritytype1=authoritytypeMapper.selectByPrimaryKey(atId);
+        return atId;
+    }
 }

@@ -8,49 +8,70 @@ layui.use(['element', 'form', 'layedit', 'laydate', 'upload', 'colorpicker','lay
 	var layer = layui.layer;
 	var $ = layui.jquery;
 
-	var select = document.getElementById('system_role_id');
-	var types;
-
-	form.on('submit(getTypes)', function (data) {
-		$.ajax({
-			type: 'post'
-			, url: 'getType'
-			, dataType: 'json'
-			, success: function (data) {
-				//注册成功则msg==200
-				if (data.code == 200) {
-					layer.msg("准备渲染");
-					types=data.authoritytypes;
-
-				} else {
-					layer.msg("渲染失败!");
+	//TODOSong:这里代码拼接可能有问题 无法显示
+	form.on('submit(getManagers)', function () {
+		//发起ajax请求
+		layui.use('jquery', function () {
+			var $ = layui.jquery;
+			$.ajax({
+				type: "post",
+				url: "getManagers",
+				dataType: "json",
+				success: function (datas) {
+					console.log(datas)
+					//字符串的拼接
+					var str = "";
+					for ( i = 0; i < datas.data.count; i++) {
+						//str +="<option>"+ datas.data[i].atName+"</option>"
+						str+="<tr>"+
+							"<td>"+datas.data.mngId+"</td>"+
+							"<td>"+datas.data.mngName+"</td>"+
+							"<td>"+datas.data.atName+"</td>"+
+							"<td>"+datas.data.mngNumber+"</td>"+
+							"<td>"+datas.data.atPower+"</td>"+"</tr>"
+							//+ "<td>" +
+							// "<a class=\"layui-btn layui-btn-sm layui-btn-normal\" title=\"编辑\" onclick=\"execute_open('编辑管理员', 'admin_operation.html?id=1', 1000, 700)\" href=\"javascript:;\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n" +
+							// "<a class=\"layui-btn layui-btn-sm layui-btn-danger\" title=\"删除\" onclick=\"execute_del(this, 1, '')\" href=\"javascript:;\"><i class=\"layui-icon layui-icon-delete\"></i>删除</a>\n" +
+							// "</td>"
+					}
+					// data.forEach(function (item) {
+					//     str += "<li><a href='javascript:void(0);' id='blogTypes'>" + item.data.typeName + "</a></li>"
+					// })
+					$('#manageInfo').html(str);
+					form.render()
 				}
-			}
-			, error: function (data) {
-				layer.msg("服务器崩了!");
-			}
-		});
+			})
+		})
 	});
 
-	var ids=['1','2','3'];
-	var names=['流域','河段','水系'];
-	for (var i=0;i<ids.length;i++) {
-		var option = document.createElement("option");
-		option.setAttribute("value", ids[i]);
-		option.innerText = names[i];
-		select.appendChild(option)
-	}
-var selectId=types.atId;
-	var selectName=types.atName;
-	// for (var i = 0; i < types.length; i++) {
-	// 	var option = document.createElement("option");
-	// 	option.setAttribute("value", selectId[i]);
-	// 	option.innerText = selectName[i];
-	// 	select.appendChild(option)
-	// }
-	layui.use('form', function () {
-		form.render("select");
+	form.on('submit(getTypes)', function () {
+		//发起ajax请求
+		layui.use('jquery', function () {
+			var $ = layui.jquery;
+			$.ajax({
+				type: "post",
+				url: "getType",
+				dataType: "json",
+				success: function (datas) {
+					console.log(datas)
+					//字符串的拼接
+					var str = "";
+					for ( i = 0; i < datas.count; i++) {
+						//str +="<option>"+ datas.data[i].atName+"</option>"
+						str +="<option value='"+datas.data[i].atId+ "'>"+ datas.data[i].atName+"</option>"
+					}
+					// data.forEach(function (item) {
+					//     str += "<li><a href='javascript:void(0);' id='blogTypes'>" + item.data.typeName + "</a></li>"
+					// })
+					$('#system_role_id').html(str);
+					form.render()
+				}
+			})
+		})
 	});
+
+
+
 
 
 		/**日期选择**/
@@ -74,88 +95,90 @@ var selectId=types.atId;
 		 * @param json data.field 提交的json数据
 		 * @return json code 0:操作成功；1:value 返回操作后的状态
 		 */
-		// form.on('submit(execute)', function(data) {
-		//     layer.confirm('确认要保存吗？',function(index) {
-		// 		layer.load();
-		//         var url = data.field.request_url;
-		// 		console.log(url);
-		//         $.ajax({
-		//             url:'' + url + '',
-		//             type:'Post',
-		//             data:data.field,
-		//             dataType: "json",
-		//             success: function (data) {
-		// 				layer.closeAll('loading');
-		//                 if (data.code == 0) {
-		//                     layer.msg(data.message, {icon: 1, time: 1000});
-		//                     setTimeout(function () {
-		//                         window.parent.location.reload();
-		//                         var index = parent.layer.getFrameIndex(window.name);
-		//                         parent.layer.close(index);
-		//                     }, 1000);
-		//                 } else {
-		//                     layer.msg(data.message, {icon: 2, time: 1000});
-		//                     return false;
-		//                 }
-		//             },
-		// 			error : function(e){
-		// 				layer.closeAll('loading');
-		// 				layer.msg(e.responseText, {icon: 2, time: 1000});
-		// 			}
-		//         });
-		//         return false;
-		//     });
-		//     return false;
-		// });
-		form.on('submit(execute)', function () {
-			var mngNumber = $('#username').val();
-			var mngPwd = $('#password').val();
-			var mngPwd2 = $('#passwords').val();
-			var mngType = $('#system_role_id').val();
-			var mngName = $('#name').val();
-			var mngMobile = $('#mobile').val();
-			if (mngNumber == "") {
-				layer.msg("请输入登录账号", {icon: 2, time: 1000});
-				return false;
-			}
-			if (mngPwd.length < 6) {
-				layer.msg("登录密码最少6位数", {icon: 2, time: 1000});
-				return false;
-			}
-			if (mngMobile.length != 11) {
-				layer.msg("电话号码有误", {icon: 2, time: 1000});
-				return false;
-			}
-			layer.msg("调用成功!");
-			if (mngPwd == mngPwd2) {
+
+		form.on('submit(execute1)', function () {
+			var atPower = $('#atPower').val();
+			var atName = $('#atName').val();
+			var atSort = $('#atSort').val();
+			var atEdit = $('#atEdit').val();
+			var atAdd = $('#atAdd').val();
 				$.ajax({
 					type: 'post'
-					, url: 'register'
+					, url: 'addAtType'
 					, dataType: 'json'
 					, data: {
-						'mngNumber': mngNumber,
-						'mngPwd': mngPwd,
-						'mngType': mngType,
-						'mngName': mngName,
-						'mngMobile': mngMobile
+						'atPower': atPower,
+						'atName': atName,
+						'atSort': atSort,
+						'atEdit': atEdit,
+						'atAdd': atAdd
 					}
 					, success: function (data) {
 						//注册成功则msg==200
 						if (data.code == 200) {
-							layer.msg("注册成功!");
-							window.location.href = "/admin-operation";
-						} else if (data.code == 0) {
-							layer.msg("注册失败!");
+							layer.msg("添加成功!");
+							window.location.href = "/auth_operation";
 						}
 					}
 					, error: function (data) {
 						layer.msg("服务器崩了!");
 					}
 				})
-			} else {
-				layer.msg("两次密码不一致!");
-			}
+
 		});
+
+	form.on('submit(execute)', function () {
+		var mngNumber = $('#username').val();
+		var mngPwd = $('#password').val();
+		var mngPwd2 = $('#passwords').val();
+		var mngType = $('#system_role_id').val();
+		var mngName = $('#name').val();
+		var mngMobile = $('#mobile').val();
+		if (mngNumber == "") {
+			layer.msg("请输入登录账号", {icon: 2, time: 1000});
+			return false;
+		}
+		if (mngPwd.length < 6) {
+			layer.msg("登录密码最少6位数", {icon: 2, time: 1000});
+			return false;
+		}
+		if (mngMobile.length != 11) {
+			layer.msg("电话号码有误", {icon: 2, time: 1000});
+			return false;
+		}
+		layer.msg("调用成功!");
+		if (mngPwd == mngPwd2) {
+			$.ajax({
+				type: 'post'
+				, url: 'register'
+				, dataType: 'json'
+				, data: {
+					'mngNumber': mngNumber,
+					'mngPwd': mngPwd,
+					'mngType': mngType,
+					'mngName': mngName,
+					'mngMobile': mngMobile
+				}
+				, success: function (data) {
+					//注册成功则msg==200
+					if (data.code == 200) {
+						layer.msg("注册成功!");
+						window.location.href = "/admin-operation";
+					} else if (data.code == 0) {
+						layer.msg("注册失败!");
+					}
+				}
+				, error: function (data) {
+					layer.msg("服务器崩了!");
+				}
+			})
+		} else {
+			layer.msg("两次密码不一致!");
+		}
+	});
+
+	//TODOSong:显示管理员信息
+
 
 
 		/**
@@ -291,6 +314,8 @@ var selectId=types.atId;
 				}
 			});
 		});
+
+
 	}
 
 	/**选项卡切换**/
@@ -306,3 +331,29 @@ var selectId=types.atId;
 		var url = $(this).data('url');
 		$('.layui-iframe').attr('src', url);
 	});
+
+// function loadType() {
+// 	//发起ajax请求
+// 	layui.use('jquery', function () {
+// 		var $ = layui.jquery;
+// 		$.ajax({
+// 			type: "post",
+// 			url: "getType",
+// 			dataType: "json",
+// 			success: function (datas) {
+// 				console.log(datas)
+// 				//字符串的拼接
+// 				var str = "";
+// 				for ( i = 0; i < datas.count; i++) {
+// 					//str +="<option>"+ datas.data[i].atName+"</option>"
+// 					str +="<option value='"+datas.data[i].atId+ "'>"+ datas.data[i].atName+"</option>"
+// 				}
+// 				// data.forEach(function (item) {
+// 				//     str += "<li><a href='javascript:void(0);' id='blogTypes'>" + item.data.typeName + "</a></li>"
+// 				// })
+// 				$('#system_role_id').html($('#system_role_id').html() + str);
+// 				form.render()
+// 			}
+// 		})
+// 	})
+// }
